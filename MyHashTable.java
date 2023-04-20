@@ -6,9 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 
-
-
-public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
+public class MyHashTable<K, V> implements Iterable<MyPair<K, V>> {
 	// num of entries to the table
 	private int size;
 	// num of buckets 
@@ -16,19 +14,26 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	// load factor needed to check for rehashing 
 	private static final double MAX_LOAD_FACTOR = 0.75;
 	// ArrayList of buckets. Each bucket is a LinkedList of HashPair
-	private ArrayList<LinkedList<MyPair<K,V>>> buckets; 
+	private ArrayList<LinkedList<MyPair<K, V>>> buckets;
 
+
+	private void ConstructorHelper() {
+		this.size = 0;
+		this.buckets = new ArrayList<>(this.capacity);
+		for (int i = 0; i < this.capacity; i++) {
+			this.buckets.add(new LinkedList<>());
+		}
+	}
 
 	// constructors
 	public MyHashTable() {
-		this.size = 0;
-		this.buckets = new ArrayList<>();
+		ConstructorHelper();
 	}
 
 	public MyHashTable(int initialCapacity) {
 		// ADD YOUR CODE BELOW THIS
-		this.capacity= initialCapacity;
-		this.size = 0;
+		this.capacity = initialCapacity;
+		ConstructorHelper();
 		//ADD YOUR CODE ABOVE THIS
 	}
 
@@ -47,15 +52,15 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	/**
 	 * Returns the buckets variable. Useful for testing  purposes.
 	 */
-	public ArrayList<LinkedList< MyPair<K,V> > > getBuckets(){
+	public ArrayList<LinkedList<MyPair<K, V>>> getBuckets() {
 		return this.buckets;
 	}
 
 	/**
-	 * Given a key, return the bucket position for the key. 
+	 * Given a key, return the bucket position for the key.
 	 */
 	public int hashFunction(K key) {
-		int hashValue = Math.abs(key.hashCode())%this.capacity;
+		int hashValue = Math.abs(key.hashCode()) % this.capacity;
 		return hashValue;
 	}
 
@@ -65,9 +70,10 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	 */
 	public V put(K key, V value) {
 		int bucketIndex = hashFunction(key);
-		LinkedList<MyPair<K,V>> bucket_List = this.buckets.get(bucketIndex);
+		LinkedList<MyPair<K, V>> bucket_List = this.buckets.get(bucketIndex);
+
 		// Over-writing the previous value with the new value...
-		for (MyPair<K,V> pair : bucket_List) {
+		for (MyPair<K, V> pair : bucket_List) {
 			if (pair.getKey().equals(key)) {
 				V previous_value = pair.getValue();
 				pair.setValue(value);
@@ -75,11 +81,11 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 			}
 		}
 		//Creating an object of type MyPair<K,V> to add in the bucket list...
-		MyPair<K,V> new_pair = new MyPair<K,V>(key,value);
+		MyPair<K, V> new_pair = new MyPair<K, V>(key, value);
 		bucket_List.add(new_pair);
 		this.size = this.size + 1;
 		// To ensure that the load factor is lesser than max load factor...
-		if(this.capacity/this.size > this.MAX_LOAD_FACTOR){
+		if ((double) this.size / this.capacity > this.MAX_LOAD_FACTOR) {
 			rehash();
 		}
 		return null;
@@ -92,9 +98,9 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 
 	public V get(K key) {
 		int bucket_index = hashFunction(key);
-		LinkedList<MyPair<K,V>> bucket_list = this.buckets.get(bucket_index);
-		for (MyPair<K,V> pair : bucket_list){
-			if (pair.getKey().equals(key)){
+		LinkedList<MyPair<K, V>> bucket_list = this.buckets.get(bucket_index);
+		for (MyPair<K, V> pair : bucket_list) {
+			if (pair.getKey().equals(key)) {
 				return pair.getValue();
 			}
 		}
@@ -102,13 +108,13 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	}
 
 	/**
-	 * Remove the HashPair corresponding to key . Expected average runtime O(1) 
+	 * Remove the HashPair corresponding to key . Expected average runtime O(1)
 	 */
 	public V remove(K key) {
 		int bucket_index = hashFunction(key);
-		LinkedList<MyPair<K,V>> bucket_list = this.buckets.get(bucket_index);
-		for (MyPair<K,V> pair : bucket_list){
-			if (pair.getKey().equals(key)){
+		LinkedList<MyPair<K, V>> bucket_list = this.buckets.get(bucket_index);
+		for (MyPair<K, V> pair : bucket_list) {
+			if (pair.getKey().equals(key)) {
 				V value = pair.getValue();
 				bucket_list.remove(pair);
 				this.size--;
@@ -119,33 +125,31 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	}
 
 
-	/** 
+	/**
 	 * Method to double the size of the hashtable if load factor increases
 	 * beyond MAX_LOAD_FACTOR.
 	 * Made public for ease of testing.
 	 * Expected average runtime is O(m), where m is the number of buckets
 	 */
 	public void rehash() {
-		int new_Capacity = this.buckets.size()*2;
-		ArrayList<LinkedList<MyPair<K,V>>> new_Bucket_List = new ArrayList<>(new_Capacity);
-		for (int i=0; i<new_Capacity;i++){
-			new_Bucket_List.add(new LinkedList<MyPair<K,V>>());
+		this.capacity *= 2;
+		ArrayList<LinkedList<MyPair<K, V>>> new_Bucket_List = new ArrayList<>(this.capacity);
+		for (int i = 0; i < this.capacity; i++) {
+			new_Bucket_List.add(new LinkedList<>());
 		}
-		for (int i=0; i<this.buckets.size(); i++){
-			LinkedList<MyPair<K,V>> old_linked_list = this.buckets.get(i);
-			for (MyPair<K,V> pair : old_linked_list){
+		for (int i = 0; i < this.buckets.size(); i++) {
+			LinkedList<MyPair<K, V>> old_linked_list = this.buckets.get(i);
+			for (MyPair<K, V> pair : old_linked_list) {
 				K key = pair.getKey();
-				V value = pair.getValue();
 
 				// Calculating the new hashcode for the key due to increased...
 				// ... capacity of new bucket list
-				int new_Bucket_Index = Math.abs(key.hashCode())%new_Capacity;
-				LinkedList<MyPair<K,V>> new_linked_List = new_Bucket_List.get(new_Bucket_Index);
-				new_linked_List.add(new MyPair<K,V>(key, value));
+				int new_Bucket_Index = hashFunction(key);
+				LinkedList<MyPair<K, V>> new_linked_list = new_Bucket_List.get(new_Bucket_Index);
+				new_linked_list.add(pair);
 			}
 		}
 		this.buckets = new_Bucket_List;
-		this.capacity = this.capacity*2;
 	}
 
 	/**
@@ -154,10 +158,10 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	 */
 
 	public ArrayList<K> getKeySet() {
-		ArrayList<K> keys_array_list = new ArrayList<K>();
-		for (int i=0; i<this.buckets.size();i++){
-			LinkedList<MyPair<K,V>> linked_list = this.buckets.get(i);
-			for(MyPair<K,V> pair : linked_list){
+		ArrayList<K> keys_array_list = new ArrayList<>();
+		for (int i = 0; i < this.buckets.size(); i++) {
+			LinkedList<MyPair<K, V>> linked_list = this.buckets.get(i);
+			for (MyPair<K, V> pair : linked_list) {
 				keys_array_list.add(pair.getKey());
 			}
 		}
@@ -189,8 +193,8 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	 * Returns an ArrayList of all the key-value pairs present in this hashtable.
 	 * Expected average runtime is O(m) where m is the number of buckets
 	 */
-	public ArrayList<MyPair<K,V>> getEntries() {
-		ArrayList<MyPair<K, V>> pairs_array_list = new ArrayList<MyPair<K, V>>();
+	public ArrayList<MyPair<K, V>> getEntries() {
+		ArrayList<MyPair<K, V>> pairs_array_list = new ArrayList<>();
 		for (int i = 0; i < this.buckets.size(); i++) {
 			LinkedList<MyPair<K, V>> linked_list = this.buckets.get(i);
 			for (MyPair<K, V> pair : linked_list) {
@@ -201,49 +205,34 @@ public class MyHashTable<K,V> implements Iterable<MyPair<K,V>>{
 	}
 
 
-	
-	
 	@Override
 	public MyHashIterator iterator() {
 		return new MyHashIterator();
 	}
 
 
-	private class MyHashIterator implements Iterator<MyPair<K,V>> {
-		private int curr_Index;
-		private Iterator<MyPair<K,V>> curr_Iterator;
+	private class MyHashIterator implements Iterator<MyPair<K, V>> {
+		private LinkedList<MyPair<K, V>> total_list;
+
 		private MyHashIterator() {
-			int curr_Index = 0;
-			curr_Iterator = null;
+			total_list = new LinkedList<>();
+			for (int i = 0; i < capacity; i++) {
+				LinkedList<MyPair<K, V>> linked_list = buckets.get(i);
+				for (MyPair<K, V> pair : linked_list) {
+					total_list.add(pair);
+				}
+			}
 		}
 
 		@Override
 		public boolean hasNext() {
-			if (curr_Iterator.hasNext() && curr_Iterator!=null){
-				return true;
-			}
-			while (curr_Index < buckets.size()) {
-				LinkedList<MyPair<K,V>> currentBucket = buckets.get(curr_Index);
-				if (currentBucket.isEmpty()) {
-					curr_Index = curr_Index+1;
-				} else {
-					curr_Iterator = currentBucket.iterator();
-					return true;
-				}
-			}
-			return false;
+			return total_list.size() > 0;
 		}
 
 
 		@Override
-		public MyPair<K,V> next() {
-			try{
-				return curr_Iterator.next();
-			}
-			catch(Exception e){
-				System.out.println("The next element does not exist...");
-			}
-			return null;
+		public MyPair<K, V> next() {
+			return total_list.remove();
 		}
 	}
 }
