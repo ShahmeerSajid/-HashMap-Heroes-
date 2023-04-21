@@ -19,9 +19,7 @@ public class GenderByKeyword extends DataAnalyzer {
 
 	@Override
 	public void extractInformation() {
-		// ADD YOUR CODE BELOW THIS
 
-		//ADD YOUR CODE ABOVE THIS
 	}
 
 }
