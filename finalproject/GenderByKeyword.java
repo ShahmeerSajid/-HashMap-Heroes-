@@ -70,14 +70,6 @@ public class GenderByKeyword extends DataAnalyzer {
 				}
 			}
 		}
-//		MyHashTable<String, Integer> res1 = getDistByKeyword("caring");
-//		for (String key : res1.getKeySet()) {
-//			System.out.println(key + ": " + res1.get(key));
-//		}
-//		res1 = getDistByKeyword("smart");
-//		for (String key : res1.getKeySet()) {
-//			System.out.println(key + ": " + res1.get(key));
-//		}
 	}
 
 }
