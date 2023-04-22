@@ -16,21 +16,22 @@ public class GenderByKeyword extends DataAnalyzer {
 
 	@Override
 	public MyHashTable<String, Integer> getDistByKeyword(String keyword) {
-		MyHashTable<String, Integer> result_hashmap = new MyHashTable<>(4);
+		MyHashTable<String, Integer> result_hashmap = new MyHashTable<>();
+		String clean_keyword = keyword.toLowerCase().trim();
 
-		Integer M_count = M_Hashmap.get(keyword);
+		Integer M_count = M_Hashmap.get(clean_keyword);
 		if (M_count == null) {
 			M_count = 0;
 		}
 		result_hashmap.put("M", M_count);
 
-		Integer W_count = W_Hashmap.get(keyword);
+		Integer W_count = W_Hashmap.get(clean_keyword);
 		if (W_count == null) {
 			W_count = 0;
 		}
 		result_hashmap.put("F", W_count);
 
-		Integer X_count = X_Hashmap.get(keyword);
+		Integer X_count = X_Hashmap.get(clean_keyword);
 		if (X_count == null) {
 			X_count = 0;
 		}
@@ -49,7 +50,7 @@ public class GenderByKeyword extends DataAnalyzer {
 			String[] data = parser.data.get(i);
 			String gender = data[7];
 			MyHashTable<String, Integer> current_Hashmap;
-			if (gender.equals("M")){
+			if (gender.equals("M")) {
 				current_Hashmap = M_Hashmap;
 			} else if (gender.equals("F")) {
 				current_Hashmap = W_Hashmap;

@@ -14,7 +14,7 @@ public class RatingDistributionBySchool extends DataAnalyzer {
 
 	@Override
 	public MyHashTable<String, Integer> getDistByKeyword(String keyword) {
-		return my_hash_table.get(keyword);
+		return my_hash_table.get(keyword.toLowerCase().trim());
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class RatingDistributionBySchool extends DataAnalyzer {
 		MyHashTable<String, MyHashTable<String, ArrayList<Double>>> temp_table = new MyHashTable<>(parser.data.size());
 		for (int i = 0; i < parser.data.size(); i++) {
 			String[] data = parser.data.get(i);
-			String school_name = data[1];
+			String school_name = data[1].toLowerCase().trim();
 			String prof_name = data[0];
 
 			MyHashTable<String, ArrayList<Double>> hash_table_2 = temp_table.get(school_name);

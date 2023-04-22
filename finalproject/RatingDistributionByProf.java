@@ -14,8 +14,7 @@ public class RatingDistributionByProf extends DataAnalyzer {
 	public MyHashTable<String, Integer> getDistByKeyword(String keyword) {
 		MyHashTable<String, Integer> hash_table = new MyHashTable<>();
 
-		System.out.println(keyword);
-		Integer[] values = my_hash_table.get(keyword);
+		Integer[] values = my_hash_table.get(keyword.toLowerCase().trim());
 		if (values == null) {
 			hash_table.put("1", 0);
 			hash_table.put("2", 0);
@@ -46,7 +45,7 @@ public class RatingDistributionByProf extends DataAnalyzer {
 
 			Integer[] values = my_hash_table.get(name);
 			if (values == null) {
-				values = new Integer[5];
+				values = new Integer[]{0, 0, 0, 0, 0};
 				my_hash_table.put(name, values);
 			}
 
